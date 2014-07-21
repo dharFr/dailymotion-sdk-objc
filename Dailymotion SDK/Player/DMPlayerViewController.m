@@ -42,7 +42,8 @@
         _volume = 1;
         _paused = true;
         _fullscreen = false;
-        _webBaseURLString = @"http://www.dailymotion.com";
+//        _webBaseURLString = @"http://www.dailymotion.com";
+        _webBaseURLString = @"http://stage-15.dailymotion.com";
     }
     return self;
 }
@@ -90,6 +91,10 @@
     // Autoresize by default
     webview.autoresizingMask = UIViewAutoresizingFlexibleWidth | UIViewAutoresizingFlexibleHeight;
 
+    // Test Only
+    self.params = [NSMutableDictionary dictionaryWithDictionary:self.params];
+    [self.params setValue:@"1" forKey:@"DMNOCAPPING"];
+    [self.params setValue:@"LR_PUBLISHER_ID=1331" forKey:@"ads_params"];
 
     // Hack: prevent vertical bouncing
     for (id subview in webview.subviews) {
@@ -111,8 +116,6 @@
     NSString *appName = NSBundle.mainBundle.bundleIdentifier;
     [url appendFormat:@"&app=%@", [appName stringByAddingPercentEscapesUsingEncoding:NSUTF8StringEncoding]];
 
-    // TEST only
-    url = [@"http://stage-15.dailymotion.com/embed/video/x1zvv3f?DMNOCAPPING=1&ads_params=LR_PUBLISHER_ID=1331" mutableCopy];
     [webview loadRequest:[NSURLRequest requestWithURL:[NSURL URLWithString:url]]];
 
     self.view = webview;
@@ -207,6 +210,10 @@
 
         return NO;
     }
+    // isFrame?
+//    else if (![request.URL.absoluteString isEqualToString: request.mainDocumentURL.absoluteString]) {
+//        return YES;
+//    }
     else if ([request.URL.path hasPrefix:@"/embed/video/"]) {
         return YES;
     }
